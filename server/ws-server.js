@@ -1,13 +1,13 @@
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 
-const PORT = process.env.WS_PORT || 3001;
+const PORT = process.env.PORT || process.env.WS_PORT || 3001;
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 const USE_REDIS = process.env.USE_REDIS !== 'false';
 
 const httpServer = createServer();
 const io = new Server(httpServer, {
-  cors: { origin: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000', methods: ['GET', 'POST'] },
+  cors: { origin: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3500', methods: ['GET', 'POST'] },
   pingTimeout: 60000,
   pingInterval: 25000,
 });
