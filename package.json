@@ -5,11 +5,11 @@
   "scripts": {
     "dev": "concurrently \"npm run dev:next\" \"npm run dev:ws\"",
     "dev:next": "next dev -p 3500",
-    "dev:ws": "cross-env WS_PORT=3501 node server/ws-server.js",
+    "dev:ws": "node scripts/start-ws.js",
     "build": "next build",
     "start": "concurrently \"npm run start:next\" \"npm run start:ws\"",
-    "start:next": "next start -p 3500",
-    "start:ws": "cross-env WS_PORT=3501 node server/ws-server.js",
+    "start:next": "next start",
+    "start:ws": "node scripts/start-ws.js",
     "lint": "next lint"
   },
   "dependencies": {

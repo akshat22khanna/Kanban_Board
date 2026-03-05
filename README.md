@@ -2,6 +2,16 @@
 
 A Trello-like collaborative Kanban board with real-time synchronization, presence indicators, and per-card edit locks. Built with **Next.js**, **WebSockets (Socket.io)**, **Redis Pub/Sub**, and **@dnd-kit** for drag-and-drop.
 
+## Live Demo
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/akshat22khanna/Kanban_Board)
+
+Once deployed, your app will be available at:
+
+`https://kanban-next-app.onrender.com`
+
+> Tip: after deployment, add this URL to your GitHub repo settings under **Settings → General → About → Website** so visitors can easily access the live demo.
+
 ## Features
 
 - **Real-time collaboration** – Card movements, edits, and comments sync across all users instantly (<200ms propagation)
@@ -36,8 +46,8 @@ npm run dev
 ```
 
 This starts both:
-- **Next.js** on [http://localhost:3000](http://localhost:3000)
-- **WebSocket server** on port 3001
+- **Next.js** on [http://localhost:3500](http://localhost:3500)
+- **WebSocket server** on port 3501
 
 **Note:** If Redis is not running, the WebSocket server uses in-memory storage. The app works for local development, but board state is lost on restart.
 
@@ -59,9 +69,9 @@ Copy `.env.example` to `.env.local` and adjust:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `NEXT_PUBLIC_APP_URL` | Next.js app URL (for CORS) | `http://localhost:3000` |
-| `NEXT_PUBLIC_WS_URL` | WebSocket server URL | `http://localhost:3001` |
-| `WS_PORT` | WebSocket server port | `3001` |
+| `NEXT_PUBLIC_APP_URL` | Next.js app URL (for CORS) | `http://localhost:3500` |
+| `NEXT_PUBLIC_WS_URL` | WebSocket server URL | `http://localhost:3501` |
+| `WS_PORT` | WebSocket server port | `3501` |
 | `REDIS_URL` | Redis connection URL | `redis://localhost:6379` |
 
 ## Architecture
@@ -69,7 +79,7 @@ Copy `.env.example` to `.env.local` and adjust:
 ```
 ┌─────────────────┐     WebSocket      ┌──────────────────┐
 │   Next.js App   │◄──────────────────►│  WS Server       │
-│   (Port 3000)   │                    │  (Port 3001)     │
+│   (Port 3500)   │                    │  (Port 3501)     │
 └─────────────────┘                    └────────┬─────────┘
                                                 │
                                                 │ Pub/Sub
@@ -94,44 +104,21 @@ Copy `.env.example` to `.env.local` and adjust:
 | `npm run build` | Build Next.js for production |
 | `npm run start` | Run production build + WebSocket server |
 
-## Deployment
+## Deployment (Render Blueprint)
 
-You can deploy the application using any container‑capable host or a platform‑as‑a‑service. Two common approaches are described below; follow the steps on your development machine (project root) and then push the resulting files to GitHub as usual.
+The easiest way to deploy is using the **Deploy to Render** button above. This uses the `render.yaml` blueprint to create all necessary services (Next.js app, WebSocket server, and Redis) automatically.
 
-### Docker / Docker Compose (any cloud VM or droplet)
+1. Click the **Deploy to Render** button.
+2. Connect your GitHub account if prompted.
+3. Give the blueprint instance a name (e.g., "kanban-board").
+4. Select your workspace (e.g., `tea-d6i48aruibrs73a7n76g`).
+5. Click **Apply**.
+6. Wait for the build and deployment to complete.
+7. Your app will be live at the URL provided by the `kanban-next-app` service.
 
-1. A `Dockerfile` is already included; build the image locally:
-   ```bash
-   docker build -t kanban-board:latest .
-   ```
-2. Optionally run everything locally with Redis:
-   ```bash
-   docker compose up --build
-   ```
-   Open `http://localhost:3500` to verify the app.
-3. Push the image to a registry and pull/run it on your server, or simply copy the above `docker-compose.yml` to the host and run `docker compose up -d`.
-
-### Continuous Deployment via GitHub Actions
-
-A workflow (`.github/workflows/deploy.yml`) is included that triggers on every push to `main`. It:
-
-1. checks out the repo and installs dependencies
-2. lints and builds the Next.js project
-3. logs in to GitHub Container Registry using `${{ secrets.GITHUB_TOKEN }}`
-4. builds and pushes the Docker image to `ghcr.io/<your‑owner>/kanban-board:latest`
-
-You can change the tag or registry by editing the workflow.  No additional secrets are required unless you push to a different registry.
-
-### Heroku / Render / Railway style (Git‑push deployment)
-
-1. A `Procfile` is included:
-   ```text
-   web: npm run start:next
-   ws:  npm run start:ws
-   ```
-2. Create an app on the platform and connect your GitHub repository.
-3. Set environment variables (`WS_PORT=3501`, `REDIS_URL`, etc.) and add a managed Redis addon if available.
-4. Push your code (`git push heroku main` or let the service build on each commit).
+### Add the live link to GitHub
+- `README.md`: replace the **Live Demo** URL with your real Render URL
+- GitHub repo → **Settings → General → About** → set **Website** to the same URL
 
 ## License
 
